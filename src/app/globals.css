@@ -1,8 +1,13 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-primary: #3b82f6;
+  --color-text: #475569;
+  --color-secondary-text: #64748b;
+  --color-background: #f8fafc;
+  --color-surface: #ffffff;
+  --color-success: #10b981;
+  --color-border: #e2e8f0;
 }
 
 @theme inline {
