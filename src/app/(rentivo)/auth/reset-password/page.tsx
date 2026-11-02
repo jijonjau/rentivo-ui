@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowLeft, ArrowRight, Lock, Check, X } from 'lucide-react';
-import FormInput from '@/src/components/ui/FormInput';
-import Button from '@/src/components/ui/Button';
+import FormInput from '@/src/components/shared/FormInput';
+import Button from '@/src/components/shared/Button';
 import zxcvbn from 'zxcvbn';
 
 export default function ResetPassword() {

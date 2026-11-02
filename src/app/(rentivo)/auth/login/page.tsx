@@ -4,8 +4,8 @@ import { SubmitEvent, useState, ChangeEvent } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Mail, Lock, ArrowRight, ArrowLeft } from 'lucide-react';
-import Button from '@/src/components/ui/Button';
-import FormInput from '@/src/components/ui/FormInput';
+import Button from '@/src/components/shared/Button';
+import FormInput from '@/src/components/shared/FormInput';
 import { useRouter } from 'next/navigation';
 
 export default function Login() {

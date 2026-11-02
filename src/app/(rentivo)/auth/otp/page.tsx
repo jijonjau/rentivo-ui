@@ -12,9 +12,9 @@ import {
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowLeft } from 'lucide-react';
-import Button from '@/src/components/ui/Button';
+import Button from '@/src/components/shared/Button';
 import { useRouter, useSearchParams } from 'next/navigation';
-import PageLoader from '@/src/components/ui/PageLoader';
+import PageLoader from '@/src/components/shared/PageLoader';
 
 export default function VerifyEmailPage() {
   return (

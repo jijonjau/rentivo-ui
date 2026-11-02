@@ -5,9 +5,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, ArrowRight, User, Mail, Phone, Lock } from 'lucide-react';
-import FormInput from '@/src/components/ui/FormInput';
-import Button from '@/src/components/ui/Button';
-import Dropdown from '@/src/components/ui/Dropdown';
+import FormInput from '@/src/components/shared/FormInput';
+import Button from '@/src/components/shared/Button';
+import Dropdown from '@/src/components/shared/Dropdown';
 
 type AccountType = 'TENANT' | 'LANDLORD' | 'AGENCY';
 

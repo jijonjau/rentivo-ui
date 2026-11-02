@@ -4,8 +4,8 @@ import { useState, SubmitEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Mail, ArrowLeft } from 'lucide-react';
-import FormInput from '@/src/components/ui/FormInput';
-import Button from '@/src/components/ui/Button';
+import FormInput from '@/src/components/shared/FormInput';
+import Button from '@/src/components/shared/Button';
 import Image from 'next/image';
 
 export default function ForgotPassword() {

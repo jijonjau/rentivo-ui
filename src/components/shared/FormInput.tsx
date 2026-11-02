@@ -4,7 +4,7 @@ import { InputHTMLAttributes, ReactNode, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 
 interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
-  label: string;
+  label?: string;
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
   labelAction?: ReactNode;
@@ -26,16 +26,17 @@ export default function FormInput({
 
   return (
     <div>
-      <div className="mb-2 flex items-center justify-between">
-        <label
-          htmlFor={props.id}
-          className="text-sm font-semibold text-[var(--color-text)]"
-        >
-          {label}
-        </label>
-
-        {labelAction}
-      </div>
+      {label && (
+        <div className="mb-2 flex items-center justify-between">
+          <label
+            htmlFor={props.id}
+            className="text-sm font-semibold text-[var(--color-text)]"
+          >
+            {label}
+          </label>
+          {labelAction}
+        </div>
+      )}
 
       <div className="relative">
         {leftIcon && (
