@@ -8,12 +8,19 @@ import { ArrowLeft, ArrowRight, Lock, Check, X } from 'lucide-react';
 import FormInput from '@/src/components/shared/FormInput';
 import Button from '@/src/components/shared/Button';
 import zxcvbn from 'zxcvbn';
+import { AuthService } from '@/src/services/AuthService';
+import { toast } from 'sonner';
 
 export default function ResetPassword() {
   const router = useRouter();
 
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
+
+  const isResetMode =
+    typeof window !== 'undefined' &&
+    !!sessionStorage.getItem('passwordResetToken');
 
   const [errors, setErrors] = useState({
     newPassword: '',
@@ -49,7 +56,7 @@ export default function ResetPassword() {
 
   const strengthLabels = ['Very weak', 'Weak', 'Fair', 'Strong', 'Very strong'];
 
-  const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const nextErrors = {
@@ -57,9 +64,7 @@ export default function ResetPassword() {
       confirmPassword: '',
     };
 
-    if (!allChecksPassed) {
-      nextErrors.newPassword = 'Please meet all password requirements.';
-    } else if (passwordStrength < 3) {
+    if (!allChecksPassed || passwordStrength < 3) {
       nextErrors.newPassword = 'Please choose a stronger password.';
     }
 
@@ -71,8 +76,23 @@ export default function ResetPassword() {
 
     if (nextErrors.newPassword || nextErrors.confirmPassword) return;
 
-    // TODO: Call reset-password API after OTP verification.
-    router.push('/auth/login');
+    try {
+      if (isResetMode) {
+        await AuthService.resetPassword({ newPassword });
+      } else {
+        await AuthService.changePassword({ currentPassword, newPassword });
+      }
+
+      sessionStorage.removeItem('passwordResetToken');
+      sessionStorage.removeItem('accessToken');
+      sessionStorage.removeItem('refreshToken');
+
+      toast.success('Password updated successfully');
+
+      router.push('/auth/login');
+    } catch {
+      // Axios handles backend error notifications.
+    }
   };
 
   return (
@@ -112,16 +132,32 @@ export default function ResetPassword() {
 
             <div className="flex flex-col items-center text-center sm:items-start sm:text-left">
               <h2 className="text-3xl font-bold text-[var(--color-text)]">
-                Reset Password
+                {isResetMode ? 'Reset Password' : 'Change Password'}
               </h2>
 
               <p className="mt-2 text-[var(--color-secondary-text)]">
-                Create a new secure password for your Rentivo account.
+                {isResetMode
+                  ? 'Create a new secure password for your Rentivo account.'
+                  : 'Update your Rentivo account password.'}
               </p>
             </div>
           </div>
 
           <form className="space-y-5" onSubmit={handleSubmit}>
+            {/* current password */}
+            {!isResetMode && (
+              <FormInput
+                label="Current Password"
+                id="currentPassword"
+                name="currentPassword"
+                type="password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                placeholder="Enter your current password"
+                autoComplete="current-password"
+                leftIcon={<Lock size={18} />}
+              />
+            )}
             {/* New Password */}
             <FormInput
               label="New Password"

@@ -8,6 +8,9 @@ import { ArrowLeft, ArrowRight, User, Mail, Phone, Lock } from 'lucide-react';
 import FormInput from '@/src/components/shared/FormInput';
 import Button from '@/src/components/shared/Button';
 import Dropdown from '@/src/components/shared/Dropdown';
+import { toast } from 'sonner';
+import { saveAuthTokens } from '@/src/utils/saveAuthTokens';
+import { AuthService } from '@/src/services/AuthService';
 
 type AccountType = 'TENANT' | 'LANDLORD' | 'AGENCY';
 
@@ -55,7 +58,7 @@ export default function Register() {
   //     setErrors((prev) => ({ ...prev, businessDocument: "" }));
   //   };
 
-  const handleRegister = (e: SubmitEvent<HTMLFormElement>) => {
+  const handleRegister = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const newErrors: Record<string, string> = {};
@@ -104,9 +107,14 @@ export default function Register() {
 
     if (Object.keys(newErrors).length > 0) return;
 
-    // TODO: Connect registration API.
-    // After successful registration, navigate to email OTP.
-    router.push('/auth/otp');
+    try {
+      const response = await AuthService.register(formData);
+      saveAuthTokens(response.payload);
+      toast.success(response.statusDesc || 'OTP sent successfully');
+      router.push('/auth/otp');
+    } catch {
+      // Axios already displays the backend error toast.
+    }
   };
 
   return (

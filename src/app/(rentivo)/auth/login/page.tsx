@@ -7,6 +7,9 @@ import { Mail, Lock, ArrowRight, ArrowLeft } from 'lucide-react';
 import Button from '@/src/components/shared/Button';
 import FormInput from '@/src/components/shared/FormInput';
 import { useRouter } from 'next/navigation';
+import { AuthService } from '@/src/services/AuthService';
+import { saveAuthTokens } from '@/src/utils/saveAuthTokens';
+import { toast } from 'sonner';
 
 export default function Login() {
   const router = useRouter();
@@ -33,7 +36,7 @@ export default function Login() {
     }));
   };
 
-  const handleLogin = (e: SubmitEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     const newErrors: Record<string, string> = {};
 
@@ -48,7 +51,14 @@ export default function Login() {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length > 0) return;
-    router.push('/auth/otp');
+    try {
+      const response = await AuthService.login(formData);
+      saveAuthTokens(response.payload);
+      toast.success(response.statusDesc || 'OTP sent successfully');
+      router.push('/auth/otp');
+    } catch {
+      // Axios already displays the backend error toast.
+    }
   };
 
   return (

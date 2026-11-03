@@ -122,40 +122,42 @@ export default function DataTable<T>({
   return (
     <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
       {/* Table toolbar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-5">
-        <div className="w-full sm:w-[420px] lg:w-[480px]">
-          <FormInput
-            id="table-search"
-            placeholder={searchPlaceholder}
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              setCurrentPage(1);
-            }}
-            leftIcon={<Search size={17} />}
-            className="!py-2"
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          {onAdd && (
-            <Button leftIcon={<Plus size={17} />} onClick={onAdd}>
-              {addLabel ?? 'Add New'}
+      {mode === 'detailed' && (
+        <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-5">
+          <div className="w-full sm:w-[420px] lg:w-[480px]">
+            <FormInput
+              id="table-search"
+              placeholder={searchPlaceholder}
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setCurrentPage(1);
+              }}
+              leftIcon={<Search size={17} />}
+              className="!py-2"
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            {onAdd && (
+              <Button leftIcon={<Plus size={17} />} onClick={onAdd}>
+                {addLabel ?? 'Add New'}
+              </Button>
+            )}
+
+            <Button
+              variant="outline"
+              leftIcon={<Filter size={17} />}
+              onClick={onFilter}
+            >
+              Filter
             </Button>
-          )}
 
-          <Button
-            variant="outline"
-            leftIcon={<Filter size={17} />}
-            onClick={onFilter}
-          >
-            Filter
-          </Button>
-
-          <Button leftIcon={<Download size={16} />} onClick={onExport}>
-            Export
-          </Button>
+            <Button leftIcon={<Download size={16} />} onClick={onExport}>
+              Export
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Table */}
       <div className="overflow-x-auto">
