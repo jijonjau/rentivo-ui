@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import Button from '../ui/Button';
+import Button from '../shared/Button';
 
 const navLinks = [
   { label: 'Home', href: '/#home' },

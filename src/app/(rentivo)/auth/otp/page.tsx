@@ -12,9 +12,14 @@ import {
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowLeft } from 'lucide-react';
-import Button from '@/src/components/ui/Button';
-import { useRouter, useSearchParams } from 'next/navigation';
-import PageLoader from '@/src/components/ui/PageLoader';
+import Button from '@/src/components/shared/Button';
+import { useRouter } from 'next/navigation';
+import PageLoader from '@/src/components/shared/PageLoader';
+import { saveAuthTokens } from '@/src/utils/saveAuthTokens';
+import { toast } from 'sonner';
+import { OtpTokenPayload } from '@/src/types/auth';
+import { AuthService } from '@/src/services/AuthService';
+import { jwtDecode } from 'jwt-decode';
 
 export default function VerifyEmailPage() {
   return (
@@ -28,8 +33,8 @@ function VerifyEmailContent() {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [timeLeft, setTimeLeft] = useState(180);
   const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
-  const searchParams = useSearchParams();
-  const email = searchParams.get('email');
+  // const searchParams = useSearchParams();
+  // const email = searchParams.get('email');
   const router = useRouter();
 
   useEffect(() => {
@@ -98,18 +103,46 @@ function VerifyEmailContent() {
     inputsRef.current[0]?.focus();
   };
 
-  const handleVerify = (e: SubmitEvent<HTMLFormElement>) => {
+  const handleVerify = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const code = otp.join('');
 
     if (code.length !== 6) return;
 
-    // TODO: Call the email verification API here.
-    if (email) {
-      router.push('/auth/reset-password');
-    } else {
-      router.push('/dashboard');
+    const otpToken = sessionStorage.getItem('otpToken');
+
+    if (!otpToken) {
+      toast.error('OTP session expired. Please try again.');
+      return;
+    }
+
+    try {
+      const decoded = jwtDecode<OtpTokenPayload>(otpToken);
+
+      const response = await AuthService.verifyOtp({ otp: code });
+
+      sessionStorage.removeItem('otpToken');
+
+      switch (decoded.type) {
+        case 'LOGIN_OTP':
+          saveAuthTokens(response.payload);
+          router.push('/dashboard');
+          break;
+
+        case 'REGISTER_OTP':
+          router.push('/auth/login');
+          break;
+
+        case 'PASSWORD_RESET_OTP':
+          saveAuthTokens(response.payload);
+          router.push('/auth/reset-password');
+          break;
+      }
+
+      toast.success(response.statusDesc || 'OTP verified successfully');
+    } catch {
+      // Axios handles backend errors.
     }
   };
 

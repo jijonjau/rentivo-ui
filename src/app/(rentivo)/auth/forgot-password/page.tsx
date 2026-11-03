@@ -4,16 +4,19 @@ import { useState, SubmitEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Mail, ArrowLeft } from 'lucide-react';
-import FormInput from '@/src/components/ui/FormInput';
-import Button from '@/src/components/ui/Button';
+import FormInput from '@/src/components/shared/FormInput';
+import Button from '@/src/components/shared/Button';
 import Image from 'next/image';
+import { AuthService } from '@/src/services/AuthService';
+import { saveAuthTokens } from '@/src/utils/saveAuthTokens';
+import { toast } from 'sonner';
 
 export default function ForgotPassword() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!email.trim()) {
@@ -23,8 +26,14 @@ export default function ForgotPassword() {
 
     setError('');
 
-    // TODO: Call forgot-password API and send OTP.
-    router.push(`/auth/otp?email=${encodeURIComponent(email)}`);
+    try {
+      const response = await AuthService.forgotPassword(email);
+      saveAuthTokens(response.payload);
+      toast.success(response.statusDesc || 'OTP sent successfully');
+      router.push(`/auth/otp?email=${encodeURIComponent(email)}`);
+    } catch {
+      // Axios already displays the backend error toast.
+    }
   };
 
   return (
