@@ -8,8 +8,8 @@ import Button from '@/src/components/shared/Button';
 import FormInput from '@/src/components/shared/FormInput';
 import { useRouter } from 'next/navigation';
 import { AuthService } from '@/src/services/AuthService';
-import { saveAuthTokens } from '@/src/utils/saveAuthTokens';
 import { toast } from 'sonner';
+import { saveTemporaryAuthTokens } from '@/src/utils/saveAuthTokens';
 
 export default function Login() {
   const router = useRouter();
@@ -53,7 +53,7 @@ export default function Login() {
     if (Object.keys(newErrors).length > 0) return;
     try {
       const response = await AuthService.login(formData);
-      saveAuthTokens(response.payload);
+      saveTemporaryAuthTokens(response.payload);
       toast.success(response.statusDesc || 'OTP sent successfully');
       router.push('/auth/otp');
     } catch {

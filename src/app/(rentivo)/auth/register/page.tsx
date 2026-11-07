@@ -9,8 +9,8 @@ import FormInput from '@/src/components/shared/FormInput';
 import Button from '@/src/components/shared/Button';
 import Dropdown from '@/src/components/shared/Dropdown';
 import { toast } from 'sonner';
-import { saveAuthTokens } from '@/src/utils/saveAuthTokens';
 import { AuthService } from '@/src/services/AuthService';
+import { saveTemporaryAuthTokens } from '@/src/utils/saveAuthTokens';
 
 type AccountType = 'TENANT' | 'LANDLORD' | 'AGENCY';
 
@@ -109,7 +109,7 @@ export default function Register() {
 
     try {
       const response = await AuthService.register(formData);
-      saveAuthTokens(response.payload);
+      saveTemporaryAuthTokens(response.payload);
       toast.success(response.statusDesc || 'OTP sent successfully');
       router.push('/auth/otp');
     } catch {

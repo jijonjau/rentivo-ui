@@ -15,11 +15,11 @@ import { ArrowLeft } from 'lucide-react';
 import Button from '@/src/components/shared/Button';
 import { useRouter } from 'next/navigation';
 import PageLoader from '@/src/components/shared/PageLoader';
-import { saveAuthTokens } from '@/src/utils/saveAuthTokens';
 import { toast } from 'sonner';
 import { OtpTokenPayload } from '@/src/types/auth';
 import { AuthService } from '@/src/services/AuthService';
 import { jwtDecode } from 'jwt-decode';
+import { saveTemporaryAuthTokens } from '@/src/utils/saveAuthTokens';
 
 export default function VerifyEmailPage() {
   return (
@@ -94,13 +94,19 @@ function VerifyEmailContent() {
     inputsRef.current[nextIndex]?.focus();
   };
 
-  const handleResendOtp = () => {
+  const handleResendOtp = async () => {
     if (timeLeft > 0) return;
-
-    // TODO: Call the resend OTP API here.
-    setOtp(['', '', '', '', '', '']);
-    setTimeLeft(180);
-    inputsRef.current[0]?.focus();
+    try {
+      const response = await AuthService.resendOtp();
+      toast.success(response.statusDesc || 'OTP resent successfully');
+    } catch {
+      // Axios handles backend errors.
+    } finally {
+      // TODO: Call the resend OTP API here.
+      setOtp(['', '', '', '', '', '']);
+      setTimeLeft(180);
+      inputsRef.current[0]?.focus();
+    }
   };
 
   const handleVerify = async (e: SubmitEvent<HTMLFormElement>) => {
@@ -126,16 +132,12 @@ function VerifyEmailContent() {
 
       switch (decoded.type) {
         case 'LOGIN_OTP':
-          saveAuthTokens(response.payload);
+        case 'REGISTER_OTP':
           router.push('/dashboard');
           break;
 
-        case 'REGISTER_OTP':
-          router.push('/auth/login');
-          break;
-
         case 'PASSWORD_RESET_OTP':
-          saveAuthTokens(response.payload);
+          saveTemporaryAuthTokens(response.payload);
           router.push('/auth/reset-password');
           break;
       }

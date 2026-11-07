@@ -70,12 +70,21 @@ const changePassword = async (data: ChangePasswordRequest): Promise<void> => {
   await axiosInstance.post('/auth/change-password', data);
 };
 
-const refreshToken = async (): Promise<ApiResponse<AuthResponse>> => {
-  const response = await axiosInstance.post<ApiResponse<AuthResponse>>(
+const refreshToken = async (): Promise<ApiResponse<void>> => {
+  const response = await axiosInstance.post<ApiResponse<void>>(
     '/auth/refresh',
-    {},
-    { authToken: 'refresh' }
+    {}
   );
+
+  return response.data;
+};
+
+const logout = async (): Promise<ApiResponse<void>> => {
+  const response = await axiosInstance.post<ApiResponse<void>>(
+    '/auth/logout',
+    {}
+  );
+
   return response.data;
 };
 
@@ -88,4 +97,5 @@ export const AuthService = {
   resetPassword,
   changePassword,
   refreshToken,
+  logout,
 };

@@ -8,8 +8,8 @@ import FormInput from '@/src/components/shared/FormInput';
 import Button from '@/src/components/shared/Button';
 import Image from 'next/image';
 import { AuthService } from '@/src/services/AuthService';
-import { saveAuthTokens } from '@/src/utils/saveAuthTokens';
 import { toast } from 'sonner';
+import { saveTemporaryAuthTokens } from '@/src/utils/saveAuthTokens';
 
 export default function ForgotPassword() {
   const router = useRouter();
@@ -28,7 +28,7 @@ export default function ForgotPassword() {
 
     try {
       const response = await AuthService.forgotPassword(email);
-      saveAuthTokens(response.payload);
+      saveTemporaryAuthTokens(response.payload);
       toast.success(response.statusDesc || 'OTP sent successfully');
       router.push(`/auth/otp?email=${encodeURIComponent(email)}`);
     } catch {

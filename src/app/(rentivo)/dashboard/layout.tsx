@@ -3,13 +3,22 @@
 import { ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import Sidebar from './Sidebar';
+import { AuthService } from '@/src/services/AuthService';
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
 
-  const handleLogout = () => {
-    // TODO: Clear authentication tokens/session
-    router.push('/auth/login');
+  const handleLogout = async () => {
+    try {
+      await AuthService.logout();
+    } catch {
+      // Continue with local cleanup even if the request fails.
+    } finally {
+      sessionStorage.removeItem('otpToken');
+      sessionStorage.removeItem('passwordResetToken');
+
+      router.push('/auth/login');
+    }
   };
 
   return (

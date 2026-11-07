@@ -14,6 +14,10 @@ export class ApiError extends Error {
 const axiosInstance = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_API_URL}/api/v1`,
   timeout: 30000,
+  withCredentials: true,
+  withXSRFToken: true,
+  xsrfCookieName: 'XSRF-TOKEN',
+  xsrfHeaderName: 'X-XSRF-TOKEN',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -23,11 +27,14 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use((config) => {
   if (config.authToken === false) return config;
 
-  const tokenType = config.authToken ?? 'access';
-  const token = sessionStorage.getItem(`${tokenType}Token`);
+  const tokenType = config.authToken;
 
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  if (tokenType === 'otp' || tokenType === 'passwordReset') {
+    const token = sessionStorage.getItem(`${tokenType}Token`);
+
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
   }
 
   return config;
