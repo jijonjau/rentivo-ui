@@ -2,9 +2,10 @@
 
 import ActionDropdown from '@/src/components/dashboard/ui/ActionDropdown';
 import DashboardHeader from '@/src/components/dashboard/ui/DashboardHeader';
-import DataTable, { TableColumn } from '@/src/components/shared/DataTable';
+import DataTable from '@/src/components/shared/DataTable/DataTable';
 import PageHeader from '@/src/components/shared/PageHeader';
 import StatusBadge from '@/src/components/shared/StatusBadge';
+import { TableColumn } from '@/src/types/table';
 import { Eye, Pencil, Ban } from 'lucide-react';
 
 export interface Role {

@@ -7,7 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "@comment test:run": "Run tests for DataTable component. Usage: npm run test:run -- DataTable.test.tsx",
+    "@comment test:run-lint": "Run npx tsc --noEmit",
+    "@comment test:coverage": "Run tests with coverage for DataTable component. Usage: npm run test:coverage -- DataTable.test.tsx",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@radix-ui/react-dropdown-menu": "^2.2.1",
@@ -23,14 +29,22 @@
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/zxcvbn": "^4.4.5",
+    "@vitejs/plugin-react": "^6.2.1",
+    "@vitest/coverage-v8": "^4.1.12",
     "eslint": "^9",
     "eslint-config-next": "16.4.3",
+    "jsdom": "^29.1.1",
     "prettier": "3.9.10",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.12"
   }
 }
