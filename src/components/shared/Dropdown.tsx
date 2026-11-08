@@ -133,7 +133,6 @@ export default function Dropdown({
       </label>
 
       <div
-        // className={`flex min-h-[46px] w-full items-center gap-2 rounded-lg border bg-white px-4 py-2 transition-all
         className={`flex min-h-[46px] w-full items-center gap-2 rounded-lg border border-[var(--color-border)] bg-white px-4 py-2 text-[var(--color-text)] transition-all
             ${
               error
@@ -164,7 +163,6 @@ export default function Dropdown({
           <input
             id={id}
             type="text"
-            // value={search}
             value={isOpen ? search : (selectedOptions[0]?.label ?? '')}
             disabled={disabled}
             placeholder={
@@ -180,7 +178,6 @@ export default function Dropdown({
               setIsOpen(true);
             }}
             onKeyDown={handleKeyDown}
-            // className="min-w-0 flex-1 py-1 text-sm text-[var(--color-text)] outline-none placeholder:text-slate-400"
             className="min-w-0 flex-1 bg-transparent py-1 text-sm text-slate-700 outline-none placeholder:text-slate-400"
             autoComplete="off"
             aria-invalid={!!error}
@@ -209,11 +206,9 @@ export default function Dropdown({
           id={`${id}-options`}
           role="listbox"
           aria-multiselectable={multiple}
-          //   className="absolute left-0 right-0 top-full z-50 mt-1 max-h-56 overflow-y-auto rounded-lg border border-[var(--color-border)] bg-white py-1 shadow-lg"
           className="absolute left-0 right-0 top-full z-50 mt-1 max-h-56 overflow-y-auto rounded-lg border border-[var(--color-border)] bg-white py-1 shadow-xl"
         >
           {filteredOptions.length > 0 ? (
-            // filteredOptions.map((option) => {
             filteredOptions.map((option, index) => {
               const isSelected = selectedValues.includes(option.value);
 
@@ -224,11 +219,6 @@ export default function Dropdown({
                   role="option"
                   aria-selected={isSelected}
                   onClick={() => handleSelect(option)}
-                  //   className={`flex w-full items-center justify-between px-4 py-2.5 text-left text-sm transition-colors hover:bg-blue-50 ${
-                  //     isSelected
-                  //       ? "bg-blue-50 font-medium text-[var(--color-primary)]"
-                  //       : "text-[var(--color-text)]"
-                  //   }`}
                   className={`flex w-full items-center justify-between px-4 py-2.5 text-left text-sm ${
                     highlightedIndex === index
                       ? 'bg-blue-50'
@@ -238,15 +228,6 @@ export default function Dropdown({
                       ? 'font-semibold text-blue-700'
                       : 'font-medium text-slate-700'
                   }`}
-                  //                 className={`flex w-full items-center justify-between px-4 py-2.5 text-left text-sm transition-colors ${
-                  //   highlightedIndex === index
-                  //     ? "bg-blue-50"
-                  //     : "hover:bg-blue-50"
-                  // } ${
-                  //   isSelected
-                  //     ? "font-medium text-[var(--color-primary)]"
-                  //     : "text-[var(--color-text)]"
-                  // }`}
                 >
                   <span>{option.label}</span>
 
@@ -270,88 +251,3 @@ export default function Dropdown({
     </div>
   );
 }
-
-// "use client";
-
-// import { SelectHTMLAttributes } from "react";
-
-// export interface DropdownOption {
-//   label: string;
-//   value: string;
-// }
-
-// interface DropdownProps
-//   extends Omit<SelectHTMLAttributes<HTMLSelectElement>, "value" | "onChange" | "multiple"> {
-//   label: string;
-//   options: DropdownOption[];
-//   value: string | string[];
-//   onChange: (value: string | string[]) => void;
-//   multiple?: boolean;
-//   error?: string;
-//   placeholder?: string;
-// }
-
-// export default function Dropdown({
-//   label,
-//   options,
-//   value,
-//   onChange,
-//   multiple = false,
-//   error,
-//   placeholder = "Select an option",
-//   className = "",
-//   id,
-//   ...props
-// }: DropdownProps) {
-//   return (
-//     <div>
-//       <label
-//         htmlFor={id}
-//         className="mb-2 block text-sm font-semibold text-[var(--color-text)]"
-//       >
-//         {label}
-//       </label>
-
-//       <select
-//         {...props}
-//         id={id}
-//         multiple={multiple}
-//         value={value}
-//         onChange={(e) => {
-//           if (multiple) {
-//             onChange(
-//               Array.from(e.target.selectedOptions, (option) => option.value)
-//             );
-//           } else {
-//             onChange(e.target.value);
-//           }
-//         }}
-//         aria-invalid={!!error}
-//         aria-describedby={error ? `${id}-error` : undefined}
-//         className={`w-full rounded-lg border bg-white px-4 py-3 text-sm text-[var(--color-text)] outline-none transition-all ${
-//           error
-//             ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-100"
-//             : "border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-2 focus:ring-blue-100"
-//         } ${multiple ? "min-h-32" : ""} ${className}`}
-//       >
-//         {!multiple && (
-//           <option value="" disabled>
-//             {placeholder}
-//           </option>
-//         )}
-
-//         {options.map((option) => (
-//           <option key={option.value} value={option.value}>
-//             {option.label}
-//           </option>
-//         ))}
-//       </select>
-
-//       {error && (
-//         <p id={`${id}-error`} className="mt-1.5 text-xs font-medium text-red-500">
-//           {error}
-//         </p>
-//       )}
-//     </div>
-//   );
-// }

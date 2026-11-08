@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import StatusBadge from '../shared/StatusBadge';
-import DataTable, { TableColumn } from '../shared/DataTable';
+import DataTable from '../shared/DataTable/DataTable';
+import { TableColumn } from '@/src/types/table';
 
 type Tab = 'users' | 'properties' | 'payments';
 
