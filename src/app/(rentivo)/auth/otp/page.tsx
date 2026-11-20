@@ -97,7 +97,7 @@ function VerifyEmailContent() {
   const handleResendOtp = async () => {
     if (timeLeft > 0) return;
     try {
-      const response = await AuthService.resendOtp();
+      const response = await AuthService.ResendOtp();
       toast.success(response.statusDesc || 'OTP resent successfully');
     } catch {
       // Axios handles backend errors.
@@ -126,7 +126,7 @@ function VerifyEmailContent() {
     try {
       const decoded = jwtDecode<OtpTokenPayload>(otpToken);
 
-      const response = await AuthService.verifyOtp({ otp: code });
+      const response = await AuthService.VerifyOtp({ otp: code });
 
       sessionStorage.removeItem('otpToken');
 

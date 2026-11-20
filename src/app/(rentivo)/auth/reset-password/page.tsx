@@ -78,9 +78,9 @@ export default function ResetPassword() {
 
     try {
       if (isResetMode) {
-        await AuthService.resetPassword({ newPassword });
+        await AuthService.ResetPassword({ newPassword });
       } else {
-        await AuthService.changePassword({ currentPassword, newPassword });
+        await AuthService.ChangePassword({ currentPassword, newPassword });
       }
 
       sessionStorage.removeItem('passwordResetToken');

@@ -5,7 +5,7 @@ import { Check, ChevronDown, X } from 'lucide-react';
 
 export interface DropdownOption {
   label: string;
-  value: string;
+  value: string | string;
 }
 
 interface DropdownProps {

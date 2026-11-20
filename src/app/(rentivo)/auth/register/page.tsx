@@ -33,8 +33,6 @@ export default function Register() {
     accountType: 'TENANT' as AccountType,
   });
 
-  //   const [businessDocument, setBusinessDocument] = useState<File | null>(null);
-
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleChange = (
@@ -52,11 +50,6 @@ export default function Register() {
       [name]: '',
     }));
   };
-
-  //   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //     setBusinessDocument(e.target.files?.[0] ?? null);
-  //     setErrors((prev) => ({ ...prev, businessDocument: "" }));
-  //   };
 
   const handleRegister = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -89,26 +82,12 @@ export default function Register() {
       newErrors.confirmPassword = 'Passwords do not match.';
     }
 
-    // if (formData.accountType === "AGENCY") {
-    //   if (!formData.agencyName.trim()) {
-    //     newErrors.agencyName = "Agency name is required.";
-    //   }
-
-    //   if (!formData.registrationNumber.trim()) {
-    //     newErrors.registrationNumber = "Registration number is required.";
-    //   }
-
-    //   if (!businessDocument) {
-    //     newErrors.businessDocument = "Business registration document is required.";
-    //   }
-    // }
-
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length > 0) return;
 
     try {
-      const response = await AuthService.register(formData);
+      const response = await AuthService.Register(formData);
       saveTemporaryAuthTokens(response.payload);
       toast.success(response.statusDesc || 'OTP sent successfully');
       router.push('/auth/otp');
