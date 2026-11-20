@@ -27,7 +27,7 @@ export default function ForgotPassword() {
     setError('');
 
     try {
-      const response = await AuthService.forgotPassword(email);
+      const response = await AuthService.ForgotPassword(email);
       saveTemporaryAuthTokens(response.payload);
       toast.success(response.statusDesc || 'OTP sent successfully');
       router.push(`/auth/otp?email=${encodeURIComponent(email)}`);

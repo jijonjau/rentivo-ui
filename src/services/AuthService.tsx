@@ -8,8 +8,9 @@ import type {
   ResetPasswordRequest,
   VerifyOtpRequest,
 } from '../types/auth';
+import { RoleRequest, RoleResponse } from '../types/roles';
 
-const login = async (
+const Login = async (
   data: LoginRequest
 ): Promise<ApiResponse<AuthResponse>> => {
   const response = await axiosInstance.post<ApiResponse<AuthResponse>>(
@@ -20,7 +21,7 @@ const login = async (
   return response.data;
 };
 
-const register = async (
+const Register = async (
   data: RegisterRequest
 ): Promise<ApiResponse<AuthResponse>> => {
   const response = await axiosInstance.post<ApiResponse<AuthResponse>>(
@@ -30,7 +31,7 @@ const register = async (
   return response.data;
 };
 
-const verifyOtp = async (
+const VerifyOtp = async (
   data: VerifyOtpRequest
 ): Promise<ApiResponse<AuthResponse>> => {
   const response = await axiosInstance.post<ApiResponse<AuthResponse>>(
@@ -41,7 +42,7 @@ const verifyOtp = async (
   return response.data;
 };
 
-const resendOtp = async (): Promise<ApiResponse<AuthResponse>> => {
+const ResendOtp = async (): Promise<ApiResponse<AuthResponse>> => {
   const response = await axiosInstance.post<ApiResponse<AuthResponse>>(
     '/auth/resend-otp',
     {},
@@ -50,7 +51,7 @@ const resendOtp = async (): Promise<ApiResponse<AuthResponse>> => {
   return response.data;
 };
 
-const forgotPassword = async (
+const ForgotPassword = async (
   email: string
 ): Promise<ApiResponse<AuthResponse>> => {
   const response = await axiosInstance.post<ApiResponse<AuthResponse>>(
@@ -60,17 +61,17 @@ const forgotPassword = async (
   return response.data;
 };
 
-const resetPassword = async (data: ResetPasswordRequest): Promise<void> => {
+const ResetPassword = async (data: ResetPasswordRequest): Promise<void> => {
   await axiosInstance.post('/auth/reset-password', data, {
     authToken: 'passwordReset',
   });
 };
 
-const changePassword = async (data: ChangePasswordRequest): Promise<void> => {
+const ChangePassword = async (data: ChangePasswordRequest): Promise<void> => {
   await axiosInstance.post('/auth/change-password', data);
 };
 
-const refreshToken = async (): Promise<ApiResponse<void>> => {
+const RefreshToken = async (): Promise<ApiResponse<void>> => {
   const response = await axiosInstance.post<ApiResponse<void>>(
     '/auth/refresh',
     {}
@@ -79,7 +80,7 @@ const refreshToken = async (): Promise<ApiResponse<void>> => {
   return response.data;
 };
 
-const logout = async (): Promise<ApiResponse<void>> => {
+const Logout = async (): Promise<ApiResponse<void>> => {
   const response = await axiosInstance.post<ApiResponse<void>>(
     '/auth/logout',
     {}
@@ -88,14 +89,76 @@ const logout = async (): Promise<ApiResponse<void>> => {
   return response.data;
 };
 
+const CreateRole = async (request: RoleRequest): Promise<ApiResponse<void>> => {
+  const response = await axiosInstance.post<ApiResponse<void>>('/auth/roles', {
+    ...request,
+  });
+
+  return response.data;
+};
+
+const FetchRoles = async (
+  params?: QueryParams
+): Promise<ApiResponse<RoleResponse>> => {
+  const response = await axiosInstance.get<ApiResponse<RoleResponse>>(
+    '/auth/roles',
+    { params }
+  );
+
+  return response.data;
+};
+
+const FetchRoleById = async (
+  roleId: number
+): Promise<ApiResponse<RoleResponse>> => {
+  const response = await axiosInstance.get<ApiResponse<RoleResponse>>(
+    `/auth/roles/${roleId}`
+  );
+
+  return response.data;
+};
+
+const UpdateRole = async (
+  roleId: number,
+  request: RoleRequest
+): Promise<ApiResponse<void>> => {
+  const response = await axiosInstance.put<ApiResponse<void>>(
+    `/auth/roles/${roleId}`,
+    {
+      ...request,
+    }
+  );
+
+  return response.data;
+};
+
+const UpdateRoleStatus = async (
+  roleId: number,
+  enabled: boolean
+): Promise<ApiResponse<void>> => {
+  const response = await axiosInstance.patch<ApiResponse<void>>(
+    `/auth/roles/${roleId}/status`,
+    {
+      enabled,
+    }
+  );
+
+  return response.data;
+};
+
 export const AuthService = {
-  login,
-  register,
-  verifyOtp,
-  resendOtp,
-  forgotPassword,
-  resetPassword,
-  changePassword,
-  refreshToken,
-  logout,
+  Login,
+  Register,
+  VerifyOtp,
+  ResendOtp,
+  ForgotPassword,
+  ResetPassword,
+  ChangePassword,
+  RefreshToken,
+  Logout,
+  CreateRole,
+  FetchRoles,
+  FetchRoleById,
+  UpdateRole,
+  UpdateRoleStatus,
 };

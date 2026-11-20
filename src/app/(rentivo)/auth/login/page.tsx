@@ -52,7 +52,7 @@ export default function Login() {
 
     if (Object.keys(newErrors).length > 0) return;
     try {
-      const response = await AuthService.login(formData);
+      const response = await AuthService.Login(formData);
       saveTemporaryAuthTokens(response.payload);
       toast.success(response.statusDesc || 'OTP sent successfully');
       router.push('/auth/otp');

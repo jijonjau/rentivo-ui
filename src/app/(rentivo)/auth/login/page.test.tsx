@@ -24,11 +24,7 @@ vi.mock('next/image', () => ({
 }));
 
 vi.mock('next/link', () => ({
-  default: ({
-    children,
-    href,
-    ...props
-  }: React.ComponentProps<'a'>) => (
+  default: ({ children, href, ...props }: React.ComponentProps<'a'>) => (
     <a href={href} {...props}>
       {children}
     </a>
@@ -76,14 +72,18 @@ describe('Login page', () => {
   it('renders the navigation links', () => {
     render(<Login />);
 
-    expect(screen.getByRole('link', { name: /back to home/i }))
-      .toHaveAttribute('href', '/');
+    expect(screen.getByRole('link', { name: /back to home/i })).toHaveAttribute(
+      'href',
+      '/'
+    );
 
-    expect(screen.getByRole('link', { name: /forgot password/i }))
-      .toHaveAttribute('href', '/auth/forgot-password');
+    expect(
+      screen.getByRole('link', { name: /forgot password/i })
+    ).toHaveAttribute('href', '/auth/forgot-password');
 
-    expect(screen.getByRole('link', { name: /create account/i }))
-      .toHaveAttribute('href', '/auth/register');
+    expect(
+      screen.getByRole('link', { name: /create account/i })
+    ).toHaveAttribute('href', '/auth/register');
   });
 
   it('displays validation errors when submitted empty', async () => {
@@ -91,49 +91,33 @@ describe('Login page', () => {
 
     await user.click(screen.getByRole('button', { name: /sign in/i }));
 
-    expect(
-      screen.getByText('Email address is required.')
-    ).toBeInTheDocument();
+    expect(screen.getByText('Email address is required.')).toBeInTheDocument();
 
-    expect(
-      screen.getByText('Password is required.')
-    ).toBeInTheDocument();
+    expect(screen.getByText('Password is required.')).toBeInTheDocument();
 
-    expect(AuthService.login).not.toHaveBeenCalled();
+    expect(AuthService.Login).not.toHaveBeenCalled();
   });
 
   it('validates email independently', async () => {
     render(<Login />);
 
-    await user.type(
-      screen.getByLabelText('Password'),
-      'Password123!'
-    );
+    await user.type(screen.getByLabelText('Password'), 'Password123!');
 
     await user.click(screen.getByRole('button', { name: /sign in/i }));
 
-    expect(
-      screen.getByText('Email address is required.')
-    ).toBeInTheDocument();
+    expect(screen.getByText('Email address is required.')).toBeInTheDocument();
 
-    expect(
-      screen.queryByText('Password is required.')
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText('Password is required.')).not.toBeInTheDocument();
   });
 
   it('validates password independently', async () => {
     render(<Login />);
 
-    await user.type(
-      screen.getByLabelText('Email Address'),
-      'test@example.com'
-    );
+    await user.type(screen.getByLabelText('Email Address'), 'test@example.com');
 
     await user.click(screen.getByRole('button', { name: /sign in/i }));
 
-    expect(
-      screen.getByText('Password is required.')
-    ).toBeInTheDocument();
+    expect(screen.getByText('Password is required.')).toBeInTheDocument();
 
     expect(
       screen.queryByText('Email address is required.')
@@ -145,14 +129,9 @@ describe('Login page', () => {
 
     await user.click(screen.getByRole('button', { name: /sign in/i }));
 
-    expect(
-      screen.getByText('Email address is required.')
-    ).toBeInTheDocument();
+    expect(screen.getByText('Email address is required.')).toBeInTheDocument();
 
-    await user.type(
-      screen.getByLabelText('Email Address'),
-      'test@example.com'
-    );
+    await user.type(screen.getByLabelText('Email Address'), 'test@example.com');
 
     expect(
       screen.queryByText('Email address is required.')
@@ -171,61 +150,45 @@ describe('Login page', () => {
       },
     };
 
-    vi.mocked(AuthService.login).mockResolvedValue(response);
+    vi.mocked(AuthService.Login).mockResolvedValue(response);
 
     render(<Login />);
 
-    await user.type(
-      screen.getByLabelText('Email Address'),
-      'test@example.com'
-    );
+    await user.type(screen.getByLabelText('Email Address'), 'test@example.com');
 
-    await user.type(
-      screen.getByLabelText('Password'),
-      'Password123!'
-    );
+    await user.type(screen.getByLabelText('Password'), 'Password123!');
 
     await user.click(screen.getByRole('button', { name: /sign in/i }));
 
     await waitFor(() => {
-      expect(AuthService.login).toHaveBeenCalledWith({
+      expect(AuthService.Login).toHaveBeenCalledWith({
         email: 'test@example.com',
         password: 'Password123!',
       });
 
-      expect(saveTemporaryAuthTokens).toHaveBeenCalledWith(
-        response.payload
-      );
+      expect(saveTemporaryAuthTokens).toHaveBeenCalledWith(response.payload);
 
-      expect(toast.success).toHaveBeenCalledWith(
-        'Verification OTP sent'
-      );
+      expect(toast.success).toHaveBeenCalledWith('Verification OTP sent');
 
       expect(mockPush).toHaveBeenCalledWith('/auth/otp');
     });
   });
 
   it('does not redirect or save tokens when login fails', async () => {
-    vi.mocked(AuthService.login).mockRejectedValue(
+    vi.mocked(AuthService.Login).mockRejectedValue(
       new Error('Invalid credentials')
     );
 
     render(<Login />);
 
-    await user.type(
-      screen.getByLabelText('Email Address'),
-      'test@example.com'
-    );
+    await user.type(screen.getByLabelText('Email Address'), 'test@example.com');
 
-    await user.type(
-      screen.getByLabelText('Password'),
-      'WrongPassword'
-    );
+    await user.type(screen.getByLabelText('Password'), 'WrongPassword');
 
     await user.click(screen.getByRole('button', { name: /sign in/i }));
 
     await waitFor(() => {
-      expect(AuthService.login).toHaveBeenCalled();
+      expect(AuthService.Login).toHaveBeenCalled();
     });
 
     expect(saveTemporaryAuthTokens).not.toHaveBeenCalled();
